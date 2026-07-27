@@ -1,0 +1,50 @@
+# -- 站点基础配置 --
+# 完整说明见 https://blowfish.page/docs/configuration/
+
+theme = "blowfish"
+
+# 部署到 https://137sowell.github.io/ ，末尾斜杠不要去掉
+baseURL = "https://137sowell.github.io/"
+
+defaultContentLanguage = "zh-cn"
+hasCJKLanguage = true          # 中文摘要 / 字数统计需要
+enableRobotsTXT = true
+enableEmoji = true
+summaryLength = 30
+
+buildDrafts = false            # 草稿（draft = true）不会被发布
+buildFuture = false            # 未来日期的文章不发布
+
+[pagination]
+  pagerSize = 12               # 列表页每页文章数
+
+[imaging]
+  anchor = "Center"            # 图片裁剪时以中心为锚点
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[sitemap]
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]   # JSON 是站内搜索必需的
+
+[related]
+  threshold = 0
+  toLower = false
+
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+
+  [[related.indices]]
+    name = "categories"
+    weight = 100
+
+  [[related.indices]]
+    name = "date"
+    weight = 10

@@ -1,0 +1,37 @@
+# -- 顶部主菜单 --
+# name    = 显示的文字
+# pageRef = 指向的栏目/页面（content 下的目录名）
+# weight  = 排序，数字小的在左边
+
+[[main]]
+  name = "日志"
+  pageRef = "posts"
+  weight = 10
+
+[[main]]
+  name = "相册"
+  pageRef = "gallery"
+  weight = 20
+
+[[main]]
+  name = "关于"
+  pageRef = "about"
+  weight = 30
+
+# 右侧图标入口（pre = 图标名，图标列表见主题 assets/icons/）
+[[main]]
+  identifier = "github"
+  pre = "github"
+  url = "https://github.com/137sowell"
+  weight = 100
+
+# -- 页脚菜单 --
+[[footer]]
+  name = "标签"
+  pageRef = "tags"
+  weight = 10
+
+[[footer]]
+  name = "订阅 RSS"
+  url = "/index.xml"
+  weight = 20

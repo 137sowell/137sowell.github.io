@@ -1,0 +1,90 @@
+# -- 主题参数 --
+# 每一项的详细说明见 https://blowfish.page/docs/configuration/#theme-parameters
+
+colorScheme = "ocean"          # 可选：blowfish / ocean / forest / autumn / noir / slate / fire ...
+defaultAppearance = "light"    # 默认亮色还是暗色：light / dark
+autoSwitchAppearance = true    # 跟随系统的深色模式自动切换
+
+enableSearch = true            # 站内搜索（顶部放大镜）
+enableCodeCopy = true          # 代码块一键复制
+enableA11y = false
+
+mainSections = ["posts", "gallery"]   # 首页“最近”里同时列出日志和相册
+
+# 没有单独指定封面图时使用的兜底图片，文件放在 assets/ 下
+defaultBackgroundImage = "img/hero.jpg"
+defaultFeaturedImage = "img/hero.jpg"
+
+disableImageOptimization = false   # false = 由 Hugo 自动压缩/生成多尺寸图，照片站建议保持
+smartTOC = true
+
+[header]
+  layout = "fixed"             # basic / fixed / fixed-fill / fixed-gradient / fixed-fill-blur
+
+[footer]
+  showMenu = true
+  showCopyright = true
+  showThemeAttribution = true
+  showAppearanceSwitcher = true
+  showScrollToTop = true
+
+[homepage]
+  layout = "hero"              # page / profile / hero / card / background / custom
+  homepageImage = "img/hero.jpg"   # 首页顶部大图，换成自己的照片即可
+  showRecent = true            # 首页下方显示最新文章
+  showRecentItems = 6
+  showMoreLink = true
+  showMoreLinkDest = "posts"
+  cardView = true              # 最新文章用卡片（带缩略图）形式展示
+  disableHeroImageFilter = false   # true = 关闭大图上的紫蓝色滤镜，显示照片原色
+
+[article]
+  showDate = true
+  showDateUpdated = false
+  showAuthor = false
+  showViews = false
+  showLikes = false
+  showHero = true
+  heroStyle = "big"            # basic / big / background / thumbAndBackground
+  layoutBackgroundBlur = true
+  showBreadcrumbs = true
+  showDraftLabel = true
+  showEdit = false             # 不显示“在 GitHub 上编辑此页”
+  showHeadingAnchors = true
+  showPagination = true
+  showReadingTime = true
+  showTableOfContents = false  # 随笔类文章一般不需要目录，技术长文可改 true
+  showRelatedContent = true
+  relatedContentLimit = 3
+  showTaxonomies = true
+  showWordCount = false
+  showZenMode = true
+  sharingLinks = ["twitter", "telegram", "email"]
+
+[list]
+  showHero = false
+  showBreadcrumbs = false
+  showSummary = true
+  showTableOfContents = false
+  showCards = true
+  cardView = true
+  groupByYear = true           # 列表按年份分组，写日志很好用
+  orderByWeight = false
+
+[taxonomy]
+  showTermCount = true
+  showHero = false
+  showBreadcrumbs = false
+  showTableOfContents = false
+  cardView = false
+
+[term]
+  showHero = false
+  showBreadcrumbs = false
+  showTableOfContents = false
+  groupByYear = false
+  cardView = true
+
+[verification]
+  # google = ""
+  # bing = ""

@@ -1,0 +1,224 @@
+{{- /*
+  photos —— 照片墙短代码。核心是「超过 N 张自动折叠成 +N」，点一下展开全部。
+
+  用法（把图片和 index.md 放在同一个文件夹里，然后在正文里写）：
+    photos                    取本文件夹下所有图片，超过 9 张折叠
+    photos fold="6"           改成超过 6 张才折叠
+    photos fold="999"         永不折叠，全部铺开
+    photos match="trip-*.jpg" 只取匹配的图片
+    photos cols="4"           每行 4 张（默认 3，此时 fold 建议用 8 或 12）
+
+  默认 3 列 + 折叠阈值 9 = 正好 3 整行。1 张时单张大图，4 张时 2×2。
+*/ -}}
+
+{{- $page := .Page -}}
+{{- $fold := int (.Get "fold" | default 9) -}}
+{{- $match := .Get "match" -}}
+
+{{- $res := slice -}}
+{{- if $match -}}
+  {{- $res = $page.Resources.Match $match -}}
+{{- else -}}
+  {{- $res = $page.Resources.ByType "image" -}}
+{{- end -}}
+
+{{- $items := slice -}}
+{{- range $res -}}
+  {{- $thumb := . -}}
+  {{- $full := . -}}
+  {{- if not (in (slice "svg" "gif") .MediaType.SubType) -}}
+    {{- $thumb = .Fill "600x600 q80 Center" -}}
+    {{- if gt .Width 1920 -}}
+      {{- $full = .Resize "1920x q85" -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $items = $items | append (dict
+      "thumb" $thumb.RelPermalink
+      "full" $full.RelPermalink
+      "name" (path.Base .Name)
+      "w" .Width "h" .Height) -}}
+{{- end -}}
+
+{{- $n := len $items -}}
+{{- if eq $n 0 -}}
+  {{- warnf "photos 短代码：页面 %q 下没有找到图片" $page.File.Path -}}
+{{- else -}}
+
+  {{- /* 每个页面只输出一次样式和脚本 */ -}}
+  {{- if not ($page.Scratch.Get "wxgAssets") -}}
+    {{- $page.Scratch.Set "wxgAssets" true -}}
+    <style>
+      .wxg{--wxg-cols:3;--wxg-gap:8px;margin:1.5rem 0;width:100%}
+      .wxg-grid{display:grid;grid-template-columns:repeat(var(--wxg-cols),1fr);gap:var(--wxg-gap)}
+      .wxg-item{position:relative;display:block;padding:0;margin:0;border:0;background:none;cursor:zoom-in;
+        border-radius:6px;overflow:hidden;aspect-ratio:1/1;line-height:0}
+      .wxg-item img{width:100%;height:100%;object-fit:cover;margin:0!important;border-radius:0;
+        display:block;transition:transform .35s ease}
+      .wxg-item:hover img{transform:scale(1.04)}
+      .wxg-item:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+      .wxg-hidden{display:none}
+      .wxg.is-open .wxg-hidden{display:block}
+      .wxg-more{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+        background:rgba(0,0,0,.5);color:#fff;font-size:1.7rem;font-weight:600;letter-spacing:.02em;
+        backdrop-filter:blur(2px);cursor:pointer;transition:background .2s}
+      .wxg-more:hover{background:rgba(0,0,0,.62)}
+      .wxg.is-open .wxg-more{display:none}
+      .wxg-single{--wxg-cols:1;max-width:min(100%,560px)}
+      .wxg-single .wxg-item{aspect-ratio:auto;cursor:zoom-in}
+      .wxg-single .wxg-item img{height:auto}
+      .wxg-quad{--wxg-cols:2;max-width:min(100%,66%)}
+      .wxg-bar{margin-top:.7rem;font-size:.9rem;line-height:1.4;text-align:center}
+      .wxg-toggle{background:none;border:1px solid currentColor;border-radius:999px;
+        padding:.3rem 1.1rem;cursor:pointer;opacity:.6;font:inherit;color:inherit;transition:opacity .2s}
+      .wxg-toggle:hover{opacity:1}
+      .wxg-count{opacity:.55;margin-left:.5rem}
+
+      .wxg-viewer{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+        background:rgba(0,0,0,.92);touch-action:none;-webkit-user-select:none;user-select:none}
+      .wxg-viewer.is-open{display:flex}
+      .wxg-viewer img{max-width:94vw;max-height:88vh;object-fit:contain;margin:0;border-radius:4px;
+        box-shadow:0 10px 40px rgba(0,0,0,.5)}
+      .wxg-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border:0;
+        border-radius:50%;background:rgba(255,255,255,.1);color:#fff;font-size:1.6rem;line-height:1;
+        cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+      .wxg-nav:hover{background:rgba(255,255,255,.22)}
+      .wxg-prev{left:max(12px,3vw)}
+      .wxg-next{right:max(12px,3vw)}
+      .wxg-close{position:absolute;top:16px;right:max(12px,3vw);width:44px;height:44px;border:0;
+        border-radius:50%;background:rgba(255,255,255,.1);color:#fff;font-size:1.4rem;cursor:pointer}
+      .wxg-close:hover{background:rgba(255,255,255,.22)}
+      .wxg-idx{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:rgba(255,255,255,.8);
+        font-size:.9rem;font-variant-numeric:tabular-nums}
+      @media (max-width:640px){
+        .wxg{--wxg-gap:4px}
+        .wxg-nav{display:none}
+      }
+      @media (prefers-reduced-motion:reduce){
+        .wxg-item img,.wxg-item:hover img{transition:none;transform:none}
+      }
+    </style>
+    <script>
+      (function () {
+        if (window.__wxgInit) return;
+        window.__wxgInit = true;
+
+        var viewer, imgEl, idxEl, list = [], cur = 0;
+
+        function build() {
+          viewer = document.createElement("div");
+          viewer.className = "wxg-viewer";
+          viewer.setAttribute("role", "dialog");
+          viewer.setAttribute("aria-modal", "true");
+          viewer.innerHTML =
+            '<button class="wxg-close" aria-label="关闭">✕</button>' +
+            '<button class="wxg-nav wxg-prev" aria-label="上一张">‹</button>' +
+            '<img alt="">' +
+            '<button class="wxg-nav wxg-next" aria-label="下一张">›</button>' +
+            '<div class="wxg-idx"></div>';
+          document.body.appendChild(viewer);
+          imgEl = viewer.querySelector("img");
+          idxEl = viewer.querySelector(".wxg-idx");
+
+          viewer.addEventListener("click", function (e) {
+            if (e.target.closest(".wxg-close")) return close();
+            if (e.target.closest(".wxg-prev")) return step(-1);
+            if (e.target.closest(".wxg-next")) return step(1);
+            if (e.target === viewer) close();
+          });
+
+          var x0 = null;
+          viewer.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+          viewer.addEventListener("touchend", function (e) {
+            if (x0 === null) return;
+            var dx = e.changedTouches[0].clientX - x0;
+            x0 = null;
+            if (Math.abs(dx) > 45) step(dx < 0 ? 1 : -1);
+          }, { passive: true });
+        }
+
+        function show(i) {
+          cur = (i + list.length) % list.length;
+          imgEl.src = list[cur];
+          idxEl.textContent = list.length > 1 ? cur + 1 + " / " + list.length : "";
+        }
+        function step(d) { if (list.length > 1) show(cur + d); }
+        function open(urls, i) {
+          if (!viewer) build();
+          list = urls;
+          show(i);
+          viewer.classList.add("is-open");
+          document.body.style.overflow = "hidden";
+        }
+        function close() {
+          viewer.classList.remove("is-open");
+          document.body.style.overflow = "";
+          imgEl.src = "";
+        }
+
+        document.addEventListener("keydown", function (e) {
+          if (!viewer || !viewer.classList.contains("is-open")) return;
+          if (e.key === "Escape") close();
+          else if (e.key === "ArrowLeft") step(-1);
+          else if (e.key === "ArrowRight") step(1);
+        });
+
+        document.addEventListener("click", function (e) {
+          var toggle = e.target.closest(".wxg-toggle, .wxg-more");
+          if (toggle) {
+            var box = toggle.closest(".wxg");
+            var opened = box.classList.toggle("is-open");
+            var btn = box.querySelector(".wxg-toggle");
+            if (btn) btn.textContent = opened ? btn.dataset.less : btn.dataset.more;
+            if (!opened) box.scrollIntoView({ block: "nearest", behavior: "smooth" });
+            e.preventDefault();
+            return;
+          }
+          var item = e.target.closest(".wxg-item");
+          if (!item) return;
+          e.preventDefault();
+          var box = item.closest(".wxg");
+          var urls = [].map.call(box.querySelectorAll(".wxg-item"), function (el) {
+            return el.dataset.full;
+          });
+          open(urls, +item.dataset.index || 0);
+        });
+      })();
+    </script>
+  {{- end -}}
+
+  {{- $class := "" -}}
+  {{- if eq $n 1 -}}{{- $class = " wxg-single" -}}
+  {{- else if eq $n 4 -}}{{- $class = " wxg-quad" -}}{{- end -}}
+  {{- $cols := .Get "cols" -}}
+
+  {{- if not .Parent }}<div class="width-patch"></div>{{ end }}
+  <div class="wxg{{ $class }} not-prose"{{ with $cols }} style="--wxg-cols:{{ . }}"{{ end }}>
+    <div class="wxg-grid">
+      {{- range $i, $it := $items }}
+        {{- $hide := and (gt $n $fold) (ge $i $fold) }}
+        <a class="wxg-item{{ if $hide }} wxg-hidden{{ end }}"
+           href="{{ $it.full }}"
+           data-full="{{ $it.full }}"
+           data-index="{{ $i }}">
+          <img src="{{ $it.thumb }}"
+               alt="{{ $it.name }}"
+               loading="lazy"
+               decoding="async"
+               class="nozoom"
+               {{ if eq $n 1 }}width="{{ $it.w }}" height="{{ $it.h }}"{{ end }}>
+          {{- if and (gt $n $fold) (eq $i (sub $fold 1)) }}
+            <span class="wxg-more">+{{ sub $n $fold }}</span>
+          {{- end }}
+        </a>
+      {{- end }}
+    </div>
+    {{- if gt $n $fold }}
+      <div class="wxg-bar">
+        <button type="button" class="wxg-toggle"
+                data-more="展开全部 {{ $n }} 张 ↓" data-less="收起 ↑">展开全部 {{ $n }} 张 ↓</button>
+      </div>
+    {{- else if gt $n 1 }}
+      <div class="wxg-bar"><span class="wxg-count">共 {{ $n }} 张</span></div>
+    {{- end }}
+  </div>
+{{- end -}}
