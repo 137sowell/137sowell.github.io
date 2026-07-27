@@ -1,7 +1,9 @@
 # -- 主题参数 --
 # 每一项的详细说明见 https://blowfish.page/docs/configuration/#theme-parameters
 
-colorScheme = "ocean"          # 可选：blowfish / ocean / forest / autumn / noir / slate / fire ...
+colorScheme = "almond"         # 自定义配色，见 assets/css/schemes/almond.css
+                               # 取自梵高《杏花》的青绿主色，和背景图配套
+                               # 内置可选：blowfish / ocean / forest / autumn / noir / slate / fire ...
 defaultAppearance = "light"    # 默认亮色还是暗色：light / dark
 autoSwitchAppearance = false   # false = 固定用上面的亮色起步（右上角图标仍可手动切深色）
                                # 改成 true 就跟随系统的深色模式
@@ -48,7 +50,8 @@ smartTOC = true
   showViews = false
   showLikes = false
   showHero = true
-  heroStyle = "big"            # basic / big / background / thumbAndBackground
+  heroStyle = "background"     # basic / big / background / thumbAndBackground
+                               # background = 和首页一样，图片固定在页面背后
   layoutBackgroundBlur = true
   showBreadcrumbs = true
   showDraftLabel = true
@@ -65,7 +68,9 @@ smartTOC = true
   sharingLinks = ["twitter", "telegram", "email"]
 
 [list]
-  showHero = false
+  showHero = true
+  heroStyle = "background"     # 列表页也用固定背景
+  layoutBackgroundBlur = true
   showBreadcrumbs = false
   showSummary = true
   showTableOfContents = false
@@ -76,13 +81,17 @@ smartTOC = true
 
 [taxonomy]
   showTermCount = true
-  showHero = false
+  showHero = true
+  heroStyle = "background"
+  layoutBackgroundBlur = true
   showBreadcrumbs = false
   showTableOfContents = false
   cardView = false
 
 [term]
-  showHero = false
+  showHero = true
+  heroStyle = "background"
+  layoutBackgroundBlur = true
   showBreadcrumbs = false
   showTableOfContents = false
   groupByYear = false

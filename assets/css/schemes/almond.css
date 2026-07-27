@@ -1,0 +1,49 @@
+/* Almond 配色 —— 取自梵高《杏花》原图的主色
+ *
+ * 采样结果：画面主色是青绿（hue≈187，如 rgb(109,156,162)），
+ * 点缀色是鼠尾草绿（rgb(137,157,136)）和偏暖的浅米绿（rgb(187,197,172)）。
+ * primary 用青绿，secondary 用鼠尾草绿，neutral 带一点青调，
+ * 这样压在背景图上的白色遮罩不会显得脏。
+ *
+ * 想换配色：改 config/_default/params.toml 里的 colorScheme。
+ * 主题自带的方案在 themes/blowfish/assets/css/schemes/ 下。
+ */
+:root {
+  --color-neutral: 255, 255, 255;
+
+  /* 灰 —— 带一点青调，和背景画面同一个色温 */
+  --color-neutral-50: 248, 250, 250;
+  --color-neutral-100: 240, 244, 244;
+  --color-neutral-200: 226, 232, 232;
+  --color-neutral-300: 202, 211, 212;
+  --color-neutral-400: 145, 158, 160;
+  --color-neutral-500: 100, 114, 116;
+  --color-neutral-600: 72, 85, 88;
+  --color-neutral-700: 51, 63, 66;
+  --color-neutral-800: 28, 40, 43;
+  --color-neutral-900: 15, 24, 26;
+
+  /* 青绿 —— 画面主色，用在链接、标签、强调处 */
+  --color-primary-50: 240, 249, 250;
+  --color-primary-100: 220, 240, 242;
+  --color-primary-200: 186, 223, 227;
+  --color-primary-300: 143, 200, 207;
+  --color-primary-400: 100, 173, 182;
+  --color-primary-500: 74, 148, 158;
+  --color-primary-600: 58, 122, 132;
+  --color-primary-700: 48, 99, 108;
+  --color-primary-800: 41, 81, 89;
+  --color-primary-900: 30, 58, 64;
+
+  /* 鼠尾草绿 —— 画里枝叶的颜色 */
+  --color-secondary-50: 246, 248, 243;
+  --color-secondary-100: 235, 240, 229;
+  --color-secondary-200: 214, 224, 203;
+  --color-secondary-300: 187, 201, 172;
+  --color-secondary-400: 156, 174, 138;
+  --color-secondary-500: 130, 150, 113;
+  --color-secondary-600: 105, 123, 91;
+  --color-secondary-700: 85, 99, 75;
+  --color-secondary-800: 69, 80, 62;
+  --color-secondary-900: 52, 60, 47;
+}
