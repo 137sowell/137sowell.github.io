@@ -3,7 +3,8 @@
 
 colorScheme = "ocean"          # 可选：blowfish / ocean / forest / autumn / noir / slate / fire ...
 defaultAppearance = "light"    # 默认亮色还是暗色：light / dark
-autoSwitchAppearance = true    # 跟随系统的深色模式自动切换
+autoSwitchAppearance = false   # false = 固定用上面的亮色起步（右上角图标仍可手动切深色）
+                               # 改成 true 就跟随系统的深色模式
 
 enableSearch = true            # 站内搜索（顶部放大镜）
 enableCodeCopy = true          # 代码块一键复制
@@ -29,14 +30,16 @@ smartTOC = true
   showScrollToTop = true
 
 [homepage]
-  layout = "hero"              # page / profile / hero / card / background / custom
-  homepageImage = "img/hero.jpg"   # 首页顶部大图（现在是梵高《杏花》），换成自己的照片即可
+  layout = "background"        # page / profile / hero / card / background / custom
+                               # background = 大图固定在页面背后，内容滚过去时逐渐模糊
+  homepageImage = "img/hero.jpg"   # 首页背景大图（现在是梵高《杏花》），换成自己的照片即可
   showRecent = true            # 首页下方显示最新文章
   showRecentItems = 6
   showMoreLink = true
   showMoreLinkDest = "posts"
   cardView = true              # 最新文章用卡片（带缩略图）形式展示
-  disableHeroImageFilter = true    # true = 关闭大图上的紫蓝色滤镜，显示画面原色
+  layoutBackgroundBlur = true  # 往下滚时背景逐渐模糊（仅 background 版式生效）
+  disableHeroImageFilter = true    # 关闭大图上的紫蓝色滤镜（仅 hero 版式生效）
 
 [article]
   showDate = true

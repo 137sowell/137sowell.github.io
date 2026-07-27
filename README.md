@@ -73,10 +73,12 @@ tags: ["随笔"]
 
 几个常用开关（都在 `params.toml`）：
 
+- `defaultAppearance = "light"` — 默认亮色；`autoSwitchAppearance = false` 表示不跟随系统深色模式。
+  右上角的月亮图标始终可以手动切换，选择会记在浏览器里
+- `homepage.layout = "background"` — 首页大图固定在页面背后，内容滚过去时逐渐模糊（`layoutBackgroundBlur`）。
+  换成 `hero` 就是图片装在顶部圆角卡片里，另外还有 `profile` / `card` / `page`
 - `colorScheme` — 配色，可选 `blowfish` / `ocean` / `forest` / `autumn` / `noir` / `slate` 等
-- `homepage.layout` — 首页版式，可选 `hero` / `profile` / `card` / `page` / `background`
-- `homepage.disableHeroImageFilter = true` — 关掉首页大图上的蓝紫色滤镜，显示照片原色
-- `defaultAppearance` — 默认亮色还是暗色
+- `article.heroStyle` — 文章页封面样式，改成 `background` 就和首页一样是固定背景 + 滚动模糊
 
 ## 发布
 
