@@ -30,13 +30,13 @@ smartTOC = true
 
 [homepage]
   layout = "hero"              # page / profile / hero / card / background / custom
-  homepageImage = "img/hero.jpg"   # 首页顶部大图，换成自己的照片即可
+  homepageImage = "img/hero.jpg"   # 首页顶部大图（现在是梵高《杏花》），换成自己的照片即可
   showRecent = true            # 首页下方显示最新文章
   showRecentItems = 6
   showMoreLink = true
   showMoreLinkDest = "posts"
   cardView = true              # 最新文章用卡片（带缩略图）形式展示
-  disableHeroImageFilter = false   # true = 关闭大图上的紫蓝色滤镜，显示照片原色
+  disableHeroImageFilter = true    # true = 关闭大图上的紫蓝色滤镜，显示画面原色
 
 [article]
   showDate = true

@@ -1,0 +1,15 @@
+{{- /* 仅首页：大图关掉了滤镜，所以把上面的文字统一成白色 + 阴影，保证在浅色画面上也读得清 */ -}}
+{{- if .IsHome -}}
+  <style>
+    article.prose h1,
+    article.prose h2,
+    article.prose section p {
+      color: #fff !important;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, .55), 0 1px 4px rgba(0, 0, 0, .45);
+    }
+    article.prose .flex a {
+      color: #fff !important;
+      filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .5));
+    }
+  </style>
+{{- end -}}

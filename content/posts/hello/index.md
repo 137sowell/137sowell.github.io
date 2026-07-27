@@ -22,7 +22,7 @@ Markdown 的常用写法都支持：**加粗**、*斜体*、[链接](https://goh
 
 ## 在文章里插入照片
 
-把照片放进这篇文章所在的文件夹（`content/posts/hello/`），然后用 `photos` 短代码。下面这三张就是这么来的：
+把照片放进这篇文章所在的文件夹（`content/posts/hello/`），然后用 `photos` 短代码。下面这三张就是这么来的（3 张没到折叠阈值，直接铺开）：
 
 {{< photos match="snap-*.jpg" >}}
 
